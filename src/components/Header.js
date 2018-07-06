@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 
 
-import {Nav,Navbar,NavItem,NavDropdown,MenuItem} from 'react-bootstrap';
+import {Nav,Navbar,NavItem,NavDropdown,MenuItem,Glyphicon} from 'react-bootstrap';
 
 
 
@@ -12,29 +12,24 @@ class Header extends Component {
    
   }
 
-  
+ tituloNav(){
+   return(<span><Glyphicon glyph="tasks" /> Opciones</span>);
+ }
 
   render(){
     return(
         <Navbar>
         <Navbar.Header>
-          <Navbar.Brand>
-            <a href="#home">React-Bootstrap</a>
+          <Navbar.Brand bsStyle="danger">
+            <a href="/"><span style={{color:'#e94949'}}><Glyphicon glyph="star" /></span> OCR-Requirimientos</a>
           </Navbar.Brand>
         </Navbar.Header>
-        <Nav>
-          <NavItem eventKey={1} href="#">
-            Link
-          </NavItem>
-          <NavItem eventKey={2} href="#">
-            Link
-          </NavItem>
-          <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
-            <MenuItem eventKey={3.1}>Action</MenuItem>
-            <MenuItem eventKey={3.2}>Another action</MenuItem>
-            <MenuItem eventKey={3.3}>Something else here</MenuItem>
+        <Nav pullRight={true}>
+          <NavDropdown eventKey={3} title={this.tituloNav()} id="basic-nav-dropdown">
+            <MenuItem eventKey={3.2} href="/New"><Glyphicon glyph="plus"/> Nuevo Requerimiento</MenuItem>
+            <MenuItem eventKey={3.3} href="/List"><Glyphicon glyph="th" /> Lista Requerimientos</MenuItem>
             <MenuItem divider />
-            <MenuItem eventKey={3.4}>Separated link</MenuItem>
+            <MenuItem eventKey={3.4} href="/"><Glyphicon glyph="home" /> Home</MenuItem>
           </NavDropdown>
         </Nav>
       </Navbar>
