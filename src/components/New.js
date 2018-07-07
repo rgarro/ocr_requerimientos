@@ -19,12 +19,25 @@ class New extends Component {
     super(props);
     this.state = {
         clasificaciones:[],
-        colaboradores:[]
+        colaboradores:[],
+        modulos:[]
       };
     this.app = firebase.initializeApp(FIREBASE_CONFIG);
     this.database = this.app.database().ref();
     this.obtenerClasificaciones();
     this.obtenerColaboradores();
+    this.obtenerModulos();
+  }
+
+  obtenerModulos(){
+    var res = this.database.child('datos/modulos');
+    res.once("value").then((function(snapshot){
+        this.modulosSnap(snapshot);
+    }).bind(this));
+  }
+
+  modulosSnap(snapshot){
+    this.setState({modulos:snapshot.val()});
   }
 
   obtenerColaboradores(){
@@ -52,6 +65,7 @@ class New extends Component {
   form(){
       const clasificaciones = this.state.clasificaciones.map((clasificacion) =><option>{clasificacion}</option>);
       const colaboradores = this.state.colaboradores.map((colaborador) =><option>{colaborador}</option>);
+      const modulos = this.state.modulos.map((modulo) =><option>{modulo}</option>);
       return(<Form id="" horizontal>
         <FieldGroup
             id="requerimientoNombre"
@@ -67,14 +81,12 @@ class New extends Component {
       {colaboradores}
       </FormControl>
     </FormGroup>
-    <FieldGroup
-            id="requerimientoModulo"
-            name="requerimiento[modulo]"
-            type="text"
-            label="Modulo"
-            placeholder="Modulo donde se desarrollara"
-            required="required"
-        />
+    <FormGroup controlId="requerimientoModulo">
+      <ControlLabel>Modulo:</ControlLabel>
+      <FormControl componentClass="select" placeholder="select" name="requerimiento[modulo]">
+      {modulos}
+      </FormControl>
+    </FormGroup>
         <FormGroup controlId="requerimientoClasificacion">
       <ControlLabel>Clasificacion:</ControlLabel>
       <FormControl componentClass="select" placeholder="select" name="requerimiento[clasificacion]">
