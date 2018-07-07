@@ -1,16 +1,11 @@
 import React,{Component} from 'react';
 
 
-import {Nav,Navbar,NavItem,NavDropdown,MenuItem,Glyphicon} from 'react-bootstrap';
+import {Nav,Navbar,NavDropdown,MenuItem,Glyphicon} from 'react-bootstrap';
 
 
 
 class Header extends Component {
-
-  constructor(props){
-    super(props);
-   
-  }
 
  tituloNav(){
    return(<span><Glyphicon glyph="tasks" /> Opciones</span>);

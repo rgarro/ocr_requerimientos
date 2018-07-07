@@ -2,12 +2,8 @@ import React,{Component} from 'react';
 import {Grid,Row,Col} from 'react-bootstrap';
 
 
-class List extends Component {
 
-  constructor(props){
-    super(props);
-   
-  }
+class List extends Component {
 
   render(){
     return(<Grid>

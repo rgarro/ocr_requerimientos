@@ -15,7 +15,7 @@ class App extends Component {
         <div className="App">
         <Pace color="#84b2da" height={2}/>
      <Header/>
-     <div class="container-fluid">
+     <div className="containerFluid">
      <Route exact path="/" component={Home} />
             <Route path="/List" component={List} />
             <Route path="/New" component={New} />

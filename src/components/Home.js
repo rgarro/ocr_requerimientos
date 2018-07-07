@@ -4,10 +4,6 @@ import {Grid,Row,Col} from 'react-bootstrap';
 
 class Home extends Component {
 
-  constructor(props){
-    super(props);
-   
-  }
 
   render(){
     return(<Grid>
