@@ -13,7 +13,7 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-        <Pace color="#84b2da" height={2}/>
+        <Pace color="#84b2da" height={2}/> 
      <Header/>
      <div className="containerFluid">
      <Route exact path="/" component={Home} />

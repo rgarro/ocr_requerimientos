@@ -17,10 +17,13 @@ class New extends Component {
 
   constructor(props){
     super(props);
+    var event = new Date();
+
     this.state = {
         clasificaciones:[],
         colaboradores:[],
-        modulos:[]
+        modulos:[],
+        fecha:event.toLocaleString('es-CR')
       };
     this.app = firebase.initializeApp(FIREBASE_CONFIG);
     this.database = this.app.database().ref();
@@ -67,6 +70,10 @@ class New extends Component {
       const colaboradores = this.state.colaboradores.map((colaborador) =><option>{colaborador}</option>);
       const modulos = this.state.modulos.map((modulo) =><option>{modulo}</option>);
       return(<Form id="" horizontal>
+        <FormGroup controlId="requerimientoCreadoPor">
+      <ControlLabel><Glyphicon glyph="calendar" /> Fecha Creacion: {this.state.fecha}</ControlLabel>
+      <input type="hidden" value={this.state.fecha} name="requerimiento[fecha_creacion]"/>
+    </FormGroup>
         <FieldGroup
             id="requerimientoNombre"
             name="requerimiento[nombre]"
@@ -81,12 +88,47 @@ class New extends Component {
       {colaboradores}
       </FormControl>
     </FormGroup>
+    
+    
     <FormGroup controlId="requerimientoModulo">
       <ControlLabel>Modulo:</ControlLabel>
       <FormControl componentClass="select" placeholder="select" name="requerimiento[modulo]">
       {modulos}
       </FormControl>
     </FormGroup>
+
+<FieldGroup
+            id="requerimientoFuentes"
+            name="requerimiento[fuentes]"
+            type="text"
+            label="Fuentes"
+            placeholder="tecnicas que se aplicaron para recolectar informacion"
+            required="required"
+        />
+        <FieldGroup
+            id="requerimientoActores"
+            name="requerimiento[actores]"
+            type="text"
+            label="Actores"
+            placeholder="Actores del Proyecto que Intervienen Requerimiento"
+            required="required"
+        />
+      <FieldGroup
+            id="requerimientoObjetivo"
+            name="requerimiento[objetivo]"
+            type="text"
+            label="Objetivo"
+            placeholder="Objetivo/Meta del Requerimiento"
+            required="required"
+        />
+        <FieldGroup
+            id="requerimientoDescripcion"
+            name="requerimiento[descripcion]"
+            type="text"
+            label="Descripcion"
+            placeholder="Descripcion del Requerimiento"
+            required="required"
+        />
         <FormGroup controlId="requerimientoClasificacion">
       <ControlLabel>Clasificacion:</ControlLabel>
       <FormControl componentClass="select" placeholder="select" name="requerimiento[clasificacion]">
