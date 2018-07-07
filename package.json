@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "createjs": "^1.0.1",
+    "easeljs-react": "0.0.3",
     "firebase": "^5.2.0",
     "react": "^16.4.1",
     "react-bootstrap": "^0.32.1",
