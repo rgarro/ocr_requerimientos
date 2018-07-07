@@ -1,14 +1,18 @@
 import React,{Component} from 'react';
-import {Grid,Row,Col,FormGroup,ControlLabel,FormControl,Panel,Glyphicon,Form,HelpBlock} from 'react-bootstrap';
+import {ButtonToolbar,Button,Grid,Row,Col,FormGroup,ControlLabel,FormControl,Panel,Glyphicon,Form,HelpBlock} from 'react-bootstrap';
 import firebase from 'firebase';
 import {FIREBASE_CONFIG} from './../Config';
 
 function FieldGroup({ id, label, help, ...props }) {
     return (
       <FormGroup controlId={id}>
-        <ControlLabel>{label}</ControlLabel>
-        <FormControl {...props} />
-        {help && <HelpBlock>{help}</HelpBlock>}
+       <Col componentClass={ControlLabel} sm={2}>
+          {label}
+        </Col>
+        <Col sm={10}>
+          <FormControl {...props} />
+          {help && <HelpBlock>{help}</HelpBlock>}
+        </Col>
       </FormGroup>
     );
   }
@@ -23,6 +27,7 @@ class New extends Component {
         clasificaciones:[],
         colaboradores:[],
         modulos:[],
+        prioridades:[],
         fecha:event.toLocaleString('es-CR')
       };
     this.app = firebase.initializeApp(FIREBASE_CONFIG);
@@ -30,6 +35,25 @@ class New extends Component {
     this.obtenerClasificaciones();
     this.obtenerColaboradores();
     this.obtenerModulos();
+    this.obtenerPrioridades();
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(event) {
+    console.log('A name was submitted: ');
+    console.log(event);
+    event.preventDefault();
+  }
+
+  obtenerPrioridades(){
+    var res = this.database.child('datos/prioridades');
+    res.once("value").then((function(snapshot){
+        this.prioridadesSnap(snapshot);
+    }).bind(this));
+  }
+
+  prioridadesSnap(snapshot){
+    this.setState({prioridades:snapshot.val()});
   }
 
   obtenerModulos(){
@@ -69,10 +93,11 @@ class New extends Component {
       const clasificaciones = this.state.clasificaciones.map((clasificacion) =><option>{clasificacion}</option>);
       const colaboradores = this.state.colaboradores.map((colaborador) =><option>{colaborador}</option>);
       const modulos = this.state.modulos.map((modulo) =><option>{modulo}</option>);
-      return(<Form id="" horizontal>
+      const prioridades = this.state.prioridades.map((prioridad) =><option>{prioridad}</option>);
+      return(<Form onSubmit={this.handleSubmit} id="" horizontal>
         <FormGroup controlId="requerimientoCreadoPor">
-      <ControlLabel><Glyphicon glyph="calendar" /> Fecha Creacion: {this.state.fecha}</ControlLabel>
-      <input type="hidden" value={this.state.fecha} name="requerimiento[fecha_creacion]"/>
+        <Col componentClass={ControlLabel} sm={6}><Glyphicon glyph="calendar" /> Fecha Creacion: {this.state.fecha}</Col>
+        <input type="hidden" value={this.state.fecha} name="requerimiento[fecha_creacion]"/>
     </FormGroup>
         <FieldGroup
             id="requerimientoNombre"
@@ -83,20 +108,21 @@ class New extends Component {
             required="required"
         />
         <FormGroup controlId="requerimientoCreadoPor">
-      <ControlLabel>CreadoPor:</ControlLabel>
+        <Col componentClass={ControlLabel} sm={2}>CreadoPor:</Col>
+        <Col sm={10}>
       <FormControl componentClass="select" placeholder="select" name="requerimiento[creado_por]">
       {colaboradores}
       </FormControl>
+      </Col>
     </FormGroup>
-    
-    
     <FormGroup controlId="requerimientoModulo">
-      <ControlLabel>Modulo:</ControlLabel>
+    <Col componentClass={ControlLabel} sm={2}>Modulo:</Col>
+    <Col sm={10}>
       <FormControl componentClass="select" placeholder="select" name="requerimiento[modulo]">
       {modulos}
       </FormControl>
+      </Col>
     </FormGroup>
-
 <FieldGroup
             id="requerimientoFuentes"
             name="requerimiento[fuentes]"
@@ -130,11 +156,67 @@ class New extends Component {
             required="required"
         />
         <FormGroup controlId="requerimientoClasificacion">
-      <ControlLabel>Clasificacion:</ControlLabel>
+        <Col componentClass={ControlLabel} sm={2}>Clasificacion:</Col>
+        <Col sm={10}>
       <FormControl componentClass="select" placeholder="select" name="requerimiento[clasificacion]">
         {clasificaciones}
-      </FormControl>
+      </FormControl></Col>
     </FormGroup>
+    <FormGroup controlId="requerimientoPrioridad">
+        <Col componentClass={ControlLabel} sm={2}>Prioridad:</Col>
+        <Col sm={10}>
+      <FormControl componentClass="select" placeholder="select" name="requerimiento[prioridad]">
+        {prioridades}
+      </FormControl></Col>
+    </FormGroup>
+    <FieldGroup
+            id="requerimientoEntrada"
+            name="requerimiento[entrada]"
+            type="text"
+            label="Entrada"
+            placeholder="El sistema debe solicitar la siguiente info"
+            required="required"
+        />
+        <FieldGroup
+            id="requerimientoResultado"
+            name="requerimiento[resultado]"
+            type="text"
+            label="Resultado"
+            placeholder="El sistema debe desplegar la siguiente info"
+            required="required"
+        />
+        <FieldGroup
+            id="requerimientoSupuestos"
+            name="requerimiento[supuestos]"
+            type="text"
+            label="Restricciones y Supuestos"
+            placeholder="Limitaciones de los Requerimientos"
+            required="required"
+        />
+        <FieldGroup
+            id="requerimientoValidadoPor"
+            name="requerimiento[validado_por]"
+            type="text"
+            label="Validado Por"
+            placeholder="Joe Doe"
+            required="required"
+        />
+        <FieldGroup
+            id="requerimientoComentarios"
+            name="requerimiento[comentarios]"
+            type="text"
+            label="Comentarios"
+            placeholder="comentarios del requerimiento"
+            required="required"
+        />
+        <ButtonToolbar>
+  <Button type="submit" bsStyle="primary" bsSize="small" active>
+    Agregar
+  </Button>
+  <Button type="reset" bsSize="small" active>
+    Reset
+  </Button>
+</ButtonToolbar>
       </Form>);
   }
 
