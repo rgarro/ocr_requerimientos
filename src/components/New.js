@@ -1,7 +1,9 @@
 import React,{Component} from 'react';
 import {ButtonToolbar,Button,Grid,Row,Col,FormGroup,ControlLabel,FormControl,Panel,Glyphicon,Form,HelpBlock} from 'react-bootstrap';
+import { Alert } from "react-bs-notifier";
 import firebase from 'firebase';
 import {FIREBASE_CONFIG} from './../Config';
+var serialize = require('form-serialize');
 
 function FieldGroup({ id, label, help, ...props }) {
     return (
@@ -28,7 +30,9 @@ class New extends Component {
         colaboradores:[],
         modulos:[],
         prioridades:[],
-        fecha:event.toLocaleString('es-CR')
+        fecha:event.toLocaleString('es-CR'),
+        has_new:false,
+        req_id:""
       };
     this.app = firebase.initializeApp(FIREBASE_CONFIG);
     this.database = this.app.database().ref();
@@ -40,9 +44,18 @@ class New extends Component {
   }
 
   handleSubmit(event) {
-    console.log('A name was submitted: ');
-    console.log(event);
     event.preventDefault();
+    var form = document.getElementById('nuevoReqFRM');
+    var obj = serialize(form, { hash: true });
+    var res = this.database.child('datos/requerimientos');
+    var newChildRef = res.push();
+    obj.requerimiento.requerimiento_id = newChildRef.key;
+    newChildRef.set(obj);
+    document.getElementById("nuevoReqFRM").reset();
+    var event = new Date();
+    this.setState({fecha:event.toLocaleString('es-CR')});
+    this.setState({has_new:true});
+    this.setState({req_id:obj.requerimiento.requerimiento_id});
   }
 
   obtenerPrioridades(){
@@ -89,15 +102,31 @@ class New extends Component {
     this.setState({clasificaciones:snapshot.val()});
   }
 
+  alertNew(){
+    if(this.state.has_new){
+      
+      return(<Alert type="success" timeout={6000} headline="Nuevo Requerimiento">
+      El Requerimiento: {this.state.req_id} ha sido agregado.
+    </Alert>);
+    }else{
+      return(<b></b>);
+    }
+  }
+
+  componentDidUpdate() {
+   
+  }
+
   form(){
       const clasificaciones = this.state.clasificaciones.map((clasificacion) =><option>{clasificacion}</option>);
       const colaboradores = this.state.colaboradores.map((colaborador) =><option>{colaborador}</option>);
       const modulos = this.state.modulos.map((modulo) =><option>{modulo}</option>);
       const prioridades = this.state.prioridades.map((prioridad) =><option>{prioridad}</option>);
-      return(<Form onSubmit={this.handleSubmit} id="" horizontal>
+      return(<Form onSubmit={this.handleSubmit} id="nuevoReqFRM" horizontal>
         <FormGroup controlId="requerimientoCreadoPor">
         <Col componentClass={ControlLabel} sm={6}><Glyphicon glyph="calendar" /> Fecha Creacion: {this.state.fecha}</Col>
         <input type="hidden" value={this.state.fecha} name="requerimiento[fecha_creacion]"/>
+        <input type="hidden" value="xxx" name="requerimiento[requerimiento_id]"/>
     </FormGroup>
         <FieldGroup
             id="requerimientoNombre"
@@ -232,6 +261,7 @@ class New extends Component {
           </Panel.Heading>
           <Panel.Collapse>
             <Panel.Body>
+              {this.alertNew()}
             {this.form()}
             </Panel.Body>
           </Panel.Collapse>
