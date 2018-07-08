@@ -52,8 +52,8 @@ class New extends Component {
     obj.requerimiento.requerimiento_id = newChildRef.key;
     newChildRef.set(obj);
     document.getElementById("nuevoReqFRM").reset();
-    var event = new Date();
-    this.setState({fecha:event.toLocaleString('es-CR')});
+    var eventd = new Date();
+    this.setState({fecha:eventd.toLocaleString('es-CR')});
     this.setState({has_new:true});
     this.setState({req_id:obj.requerimiento.requerimiento_id});
   }
